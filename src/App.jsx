@@ -2,6 +2,7 @@
 import Home  from './pages/home'
 import Dashboard from './pages/dashboard'
 import SurveyPage from './pages/SurveyPage'
+import LoginPage from './pages/login'
 
 // external
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
@@ -19,6 +20,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/survey' element={<SurveyPage />} />
+          <Route path='/login' element={<LoginPage />} />
         </Routes>
       </Router>
     </>

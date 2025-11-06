@@ -7,9 +7,11 @@ import { computeScores } from "../securitySurvey/score";
 export default function SurveyPage() {
   const navigate = useNavigate();
   const [answers, setAnswers] = useState({});
+  const[score, setScore]=useState(null);
 
   const answeredCount = useMemo(() => Object.keys(answers).length, [answers]);
   const allAnswered = answeredCount === QUESTIONS.length;
+  console.log(localStorage.getItem("survey:lastAnswers"));
 
   const onChange = (qid, value) =>
     setAnswers(prev => ({ ...prev, [qid]: Number(value) }));
@@ -18,9 +20,7 @@ export default function SurveyPage() {
     e.preventDefault();
     if (!allAnswered) return;
     const result = computeScores(QUESTIONS, answers);
-    localStorage.setItem("survey:lastAnswers", JSON.stringify(answers));
-    localStorage.setItem("survey:lastResult", JSON.stringify(result));
-    alert(`Overall: ${result.overall}%\n\n` + JSON.stringify(result.byCategory, null, 2));
+    setScore(result.overall);
   };
 
   const cats = Object.values(CATEGORIES).filter(c => c !== CATEGORIES.OVERALL);
@@ -29,6 +29,13 @@ export default function SurveyPage() {
     items: QUESTIONS.filter(q => q.category === cat),
   }));
 
+  if (score) {
+    return (
+        <div style={{ maxWidth: 640, margin: "40px auto", padding: 16 }}>
+            <h1>Score:{score}</h1>
+        </div>
+    );
+    };
   return (
     <div style={{ maxWidth: 840, margin: "40px auto", padding: 16 }}>
       <h1>Security Self-Assessment</h1>
