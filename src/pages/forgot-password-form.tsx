@@ -1,6 +1,5 @@
-
-import { createClient } from '../lib/supabase/client'
 import { useState } from 'react'
+import { createClient } from '../lib/supabase/client'
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
@@ -29,7 +28,6 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
     }
   }
 
-  //cn error unsure of what to do 
   return (
     <div className={`flex flex-col gap-6 ${className ?? ''}`} {...props}>
       <div>
