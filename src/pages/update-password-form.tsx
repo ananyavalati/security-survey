@@ -1,113 +1,84 @@
-import { useState } from 'react'
-import { createClient } from '../lib/supabase/client'
+import { useEffect, useState } from 'react';
+import { createClient } from '../lib/supabase/client';
 
-export default function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [repeatPassword, setRepeatPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
+export default function UpdatePasswordForm() {
+  const supabase = createClient();
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    const supabase = createClient()
-    e.preventDefault()
-    setError(null)
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
 
-    if (password !== repeatPassword) {
-      setError('Passwords do not match')
-      return
+  // When the user comes from the email link, Supabase sets a recovery session.
+  // checks that a session exists before allowing password update.
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        setReady(true);
+      } else {
+        setErr('Open this page from the password reset email link.');
+      }
+    });
+  }, []);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr(null);
+    setMsg(null);
+
+    if (password.length < 8) {
+      setErr('Password must be at least 8 characters.');
+      return;
     }
-    setIsLoading(true)
-
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      })
-      if (error) throw error
-      setSuccess(true)
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
-    } finally {
-      setIsLoading(false)
+    if (password !== confirm) {
+      setErr('Passwords do not match.');
+      return;
     }
-  }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setLoading(false);
+
+    if (error) setErr(error.message);
+    else setMsg('Password updated. You can now sign in.');
+  };
 
   return (
-    <div className={`flex flex-col gap-6 ${className ?? ''}`} {...props}>
-      {success ? (
-        <div>
-          <div>
-            <div className="text-2xl">Thank you for signing up!</div>
-            <div>Check your email to confirm</div>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">
-              You've successfully signed up. Please check your email to confirm your account before
-              signing in.
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div>
-          <div>
-            <div className="text-2xl">Sign up</div>
-            <div>Create a new account</div>
-          </div>
-          <div>
-            <form onSubmit={handleSignUp}>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="m@example.com"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <label htmlFor="password">Password</label>
-                  </div>
-                  <input
-                    id="password"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <label htmlFor="repeat-password">Repeat Password</label>
-                  </div>
-                  <input
-                    id="repeat-password"
-                    type="password"
-                    required
-                    value={repeatPassword}
-                    onChange={(e) => setRepeatPassword(e.target.value)}
-                  />
-                </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
-                <button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Creating an account...' : 'Sign up'}
-                </button>
-              </div>
-              <div className="mt-4 text-center text-sm">
-                Already have an account?{' '}
-                <a href="/login" className="underline underline-offset-4">
-                  Login
-                </a>
-              </div>
-            </form>
-          </div>
-        </div>
+    <div style={{ padding: 24 }}>
+      <h2>Set a new password</h2>
+
+      {!ready && !err && <p>Checking your session…</p>}
+
+      {ready && (
+        <form onSubmit={onSubmit} style={{ display: 'grid', gap: 12, maxWidth: 360 }}>
+          <label htmlFor="pw">New password</label>
+          <input
+            id="pw"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <label htmlFor="pw2">Confirm password</label>
+          <input
+            id="pw2"
+            type="password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+          />
+
+          <button type="submit" disabled={loading}>
+            {loading ? 'Updating…' : 'Update password'}
+          </button>
+        </form>
       )}
+
+      {msg && <p style={{ color: 'green' }}>{msg}</p>}
+      {err && <p style={{ color: 'crimson' }}>{err}</p>}
     </div>
-  )
+  );
 }
