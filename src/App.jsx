@@ -1,30 +1,39 @@
+
 // internal
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 
 // external
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import Dashboard from './pages/dashboard'
-import Home from './pages/home'
-import LoginPage from './pages/login'
-import SurveyPage from './pages/SurveyPage'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// built-in
+// pages 
+import Home from './pages/home';
+import Dashboard from './pages/dashboard';
+import SurveyPage from './pages/SurveyPage';
+import LoginPage from './pages/login';
+import SignUpForm from './pages/sign-up-form';
+import ForgotPasswordForm from './pages/forgot-password-form';
+import UpdatePasswordForm from './pages/update-password-form';
 
-import './App.css'
+// built-in (optional: keep if you have styles here)
+import './App.css';
 
-function App() {
+export default function App() {
   return (
     <Router>
+      <NavBar />
+
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/survey" element={<SurveyPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/sign-up" element={<LoginPage />} />
-        <Route path="/update-password" element={<LoginPage />} />
-        <Route path="/forgot-password" element={<LoginPage />} />
+        <Route path="/sign-up" element={<SignUpForm />} />
+        <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+        <Route path="/update-password" element={<UpdatePasswordForm />} />
       </Routes>
-    </Router>
-  )
-}
 
-export default App
+      <Footer />
+    </Router>
+  );
+}

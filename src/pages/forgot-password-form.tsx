@@ -1,3 +1,5 @@
+
+
 import { useState } from 'react'
 import { createClient } from '../lib/supabase/client'
 
@@ -20,7 +22,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
       })
       if (error) throw error
       // Update this route to redirect to an authenticated route. The user already has an active session.
-      location.href = '/protected'
+      location.href = '/dashboard'
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     } finally {

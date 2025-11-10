@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { createClient } from '../lib/supabase/client'
+import { useNavigate } from 'react-router-dom';
+
 
 export default function LoginPage({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
