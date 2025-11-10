@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createClient } from '../lib/supabase/client'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+
 
 export default function LoginPage({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
@@ -8,7 +9,6 @@ export default function LoginPage({ className, ...props }: React.ComponentPropsW
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const supabase = createClient()
-  const navigate = useNavigate(); // ⬅️ add this
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -16,11 +16,13 @@ export default function LoginPage({ className, ...props }: React.ComponentPropsW
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
       if (error) throw error
-
-      // ⬅️ use router navigation instead of location.href
-      navigate('/dashboard', { replace: true })
+      // Update this route to redirect to an authenticated route. The user already has an active session.
+      location.href = '/'
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     } finally {
@@ -32,7 +34,7 @@ export default function LoginPage({ className, ...props }: React.ComponentPropsW
     <div {...props}>
       <div>
         <div>
-          <div className="text-2xl">Login</div>
+          <title className="text-2xl">Login</title>
           <p>Enter your email below to login to your account</p>
         </div>
         <div>
@@ -52,7 +54,10 @@ export default function LoginPage({ className, ...props }: React.ComponentPropsW
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <label htmlFor="password">Password</label>
-                  <a href="/forgot-password" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                  <a
+                    href="/forgot-password"
+                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                  >
                     Forgot your password?
                   </a>
                 </div>

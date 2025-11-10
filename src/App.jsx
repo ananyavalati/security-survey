@@ -7,7 +7,6 @@ import Footer from './components/Footer';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // pages
-import Dashboard from './pages/dashboard';
 import Home from './pages/home';
 import LoginPage from './pages/login';
 import SurveyPage from './pages/SurveyPage';
@@ -26,7 +25,6 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/survey" element={<SurveyPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="/login" element={<LoginPage />} />
         <Route path="/sign-up" element={<SignUpForm />} />
