@@ -1,88 +1,52 @@
 
 
-import { useState } from 'react'
-import { createClient } from '../lib/supabase/client'
+// src/pages/forgot-password-form.tsx
+import { useState } from 'react';
+import { createClient } from '../lib/supabase/client';
 
-export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const supabase = createClient()
+export default function ForgotPasswordForm() {
+  const [email, setEmail] = useState('');
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const supabase = createClient();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
-
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setMsg(null);
+    setErr(null);
+    setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-      if (error) throw error
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      location.href = '/dashboard'
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'http://localhost:5173/update-password',
+      });
+      if (error) throw error;
+      setMsg('Check your email for a reset link.');
+    } catch (e: unknown) {
+      setErr(e instanceof Error ? e.message : 'Something went wrong');
     } finally {
-      setIsLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className={`flex flex-col gap-6 ${className ?? ''}`} {...props}>
-      <div>
-        <div>
-          <div className="text-2xl">Login</div>
-          <div>Enter your email below to login to your account</div>
-        </div>
-        <div>
-          <form onSubmit={handleLogin}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <label htmlFor="email">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <label htmlFor="password">Password</label>
-                  <a
-                    href="/forgot-password"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Logging in...' : 'Login'}
-              </button>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{' '}
-              <a href="/sign-up" className="underline underline-offset-4">
-                Sign up
-              </a>
-            </div>
-          </form>
-        </div>
-      </div>
+    <div style={{ padding: 24 }}>
+      <h2>Forgot password</h2>
+      <form onSubmit={onSubmit} style={{ display: 'grid', gap: 12, maxWidth: 360 }}>
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? 'Sending…' : 'Send reset link'}
+        </button>
+        {msg && <p style={{ color: 'green' }}>{msg}</p>}
+        {err && <p style={{ color: 'crimson' }}>{err}</p>}
+      </form>
     </div>
-  )
+  );
 }

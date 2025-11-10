@@ -1,4 +1,4 @@
-// src/pages/SurveyPage.jsx
+
 import { useMemo, useState } from 'react'
 import { CATEGORIES, QUESTIONS, SCALE } from '../securitySurvey/questions'
 import { computeScores } from '../securitySurvey/score'
