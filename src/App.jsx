@@ -18,6 +18,7 @@ import UpdatePasswordForm from './pages/update-password-form'
 import SurveyPage from './pages/SurveyPage'
 
 // built-in
+import './App.css';
 export default function App() {
   return (
     <AuthProvider>
