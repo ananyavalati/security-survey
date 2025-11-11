@@ -13,6 +13,7 @@ import SurveyPage from './pages/SurveyPage';
 import SignUpForm from './pages/sign-up-form';
 import ForgotPasswordForm from './pages/forgot-password-form';
 import UpdatePasswordForm from './pages/update-password-form';
+import ResultsPage from './pages/results';
 
 // built-in
 import './App.css';
