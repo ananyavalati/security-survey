@@ -1,6 +1,4 @@
 
-
-// src/pages/forgot-password-form.tsx
 import { useState } from 'react';
 import { createClient } from '../lib/supabase/client';
 

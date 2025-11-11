@@ -3,7 +3,7 @@
 // external
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 
-// internal (auth, shared app logic)
+// internal
 import { AuthProvider } from "./lib/supabase/auth/AuthProvider";
 import ProtectedRoute from "./lib/supabase/auth/ProtectedRoute";
 import NavBar from './components/NavBar'
