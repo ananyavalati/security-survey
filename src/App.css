@@ -57,3 +57,9 @@ body { margin: 0; }
   padding: 24px 16px 64px;
   box-sizing: border-box;
 }
+
+:root {
+  --chart-1: #a855f7; /* purple */
+  --chart-2: #f97316; /* orange */
+  --chart-3: #3b82f6; /* blue */
+}

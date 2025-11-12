@@ -4,7 +4,7 @@ import { createClient } from '../client'
 // Make a shared “box” that will hold two things: user and loading state
 const AuthContext = createContext({ user: null, loading: true })
 
-// This component will wrap  entire app and provide user + loading to it
+// This will wrap entire app and provide user + loading to it
 export function AuthProvider({ children }) {
   const supabase = useMemo(() => createClient(), [])
 

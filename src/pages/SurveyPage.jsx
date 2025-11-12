@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { CATEGORIES, QUESTIONS, SCALE } from '../securitySurvey/questions';
 import { computeScores } from '../securitySurvey/score';
 import { createClient } from '@supabase/supabase-js';
-import { saveSurveyResult } from '../db/surveyResults/crud';
+import { saveSurveyResult } from "../db/surveyResults/crud";
 const { VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY } = import.meta.env;
 
 export default function SurveyPage() {
