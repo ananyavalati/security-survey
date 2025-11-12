@@ -1,11 +1,14 @@
-
+"use client"
 import { useMemo, useState } from 'react';
 import { CATEGORIES, QUESTIONS, SCALE } from '../securitySurvey/questions';
 import { computeScores } from '../securitySurvey/score';
+import { createClient } from '@supabase/supabase-js';
+import { saveSurveyResult } from '../db/surveyResults/crud';
+const { VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY } = import.meta.env;
 
 export default function SurveyPage() {
   const [answers, setAnswers] = useState({});          
-  const [result, setResult] = useState(null);           
+  const [result, setResult] = useState(null);  
 
   //every question must have an answer
   const allAnswered = useMemo(
@@ -21,8 +24,11 @@ export default function SurveyPage() {
   const onChange = (qid, value) =>
     setAnswers(prev => ({ ...prev, [qid]: Number(value) }));
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+
+    const supabase= await createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY);         
+
 
     if (!allAnswered) {
       alert(`Please answer all questions (${answeredCount}/${QUESTIONS.length}).`);
@@ -37,12 +43,22 @@ export default function SurveyPage() {
     // Compute results
     const computed = computeScores(QUESTIONS, answers);
 
-    // Persist so one can reload or navigate away and back
-    localStorage.setItem('survey:lastAnswers', JSON.stringify(answers));
-    localStorage.setItem('survey:lastResult', JSON.stringify(computed));
-
     // Show summary on this page
     setResult(computed);
+
+    const surveyResult = {
+      overall_score: 1.09,
+      phishing_awareness: 1.0 ,
+      basic_hygiene: 1.0
+    }
+
+    saveSurveyResult(supabase, surveyResult);
+
+
+
+
+
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
