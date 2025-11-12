@@ -41,35 +41,32 @@ export default function SurveyPage() {
     }
 
     // Compute results
-    const computed = computeScores(QUESTIONS, answers);
+const computed = computeScores(QUESTIONS, answers);
 
-    // Show summary on this page
-    setResult(computed);
+// Show summary on this page
+setResult(computed);
 
-    const surveyResult = {
-      overall_score: 1.09,
-      phishing_awareness: 1.0 ,
-      basic_hygiene: 1.0
-    }
+// Build the payload from the real category scores
+const byCat = computed.byCategory || {};
+const surveyResult = {
+  overall_score: computed.overall,                       
+  phishing_awareness: byCat[CATEGORIES.PHISHING] ?? null,
+  basic_hygiene: byCat[CATEGORIES.HYGIENE] ?? null,
+};
 
-    saveSurveyResult(supabase, surveyResult);
+// Save to Supabase
+await saveSurveyResult(supabase, surveyResult);
 
+window.scrollTo({ top: 0, behavior: 'smooth' });
 
-
-
-
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const retake = () => {
     // Clear answers and results so the form is fresh
     setAnswers({});
     setResult(null);
-    // also clear storage
-   // localStorage.removeItem('survey:lastAnswers');
-
-   // Keep lastResult if you want historical compare
+    
+   // Keep lastResult
     localStorage.removeItem('survey:lastResult');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
