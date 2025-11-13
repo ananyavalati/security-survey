@@ -1,5 +1,4 @@
 
-
 // external
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 
@@ -25,7 +24,7 @@ export default function App() {
       <Router>
         <NavBar />
 
-        <main style={{ maxWidth: 920, margin: '60px auto', padding: '0 16px' }}>
+        <main style={{ maxWidth: 1200, margin: '60px auto', padding: '0 24px' }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
