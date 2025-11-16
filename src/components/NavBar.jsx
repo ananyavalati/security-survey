@@ -8,7 +8,7 @@ export default function NavBar() {
   const activeStyle = { fontWeight: 700 };
   const navigate = useNavigate();
   const supabase = useMemo(() => createClient(), []);
-  const { user } = useAuth(); // if you are logged in, this is not null
+  const { user } = useAuth();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -40,31 +40,26 @@ export default function NavBar() {
 
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 12 }}>
           {user ? (
-            <>
-              <span style={{ color: '#9aa7b2' }}>Hi</span>
-              <button
-                onClick={handleLogout}
-                style={{
-                  background: 'transparent',
-                  color: '#e0e0e0',
-                  border: '1px solid #3e5e7b',
-                  borderRadius: 6,
-                  padding: '6px 10px',
-                  cursor: 'pointer',
-                }}
-              >
-                Logout
-              </button>
-            </>
+            <button
+              onClick={handleLogout}
+              style={{
+                background: 'transparent',
+                color: '#e0e0e0',
+                border: '1px solid #3e5e7b',
+                borderRadius: 6,
+                padding: '6px 10px',
+                cursor: 'pointer',
+              }}
+            >
+              Logout
+            </button>
           ) : (
-            <>
-              <NavLink to="/login" style={({ isActive }) => (isActive ? { ...linkStyle, ...activeStyle } : linkStyle)}>
-                Login
-              </NavLink>
-              <NavLink to="/sign-up" style={({ isActive }) => (isActive ? { ...linkStyle, ...activeStyle } : linkStyle)}>
-                Sign Up
-              </NavLink>
-            </>
+            <NavLink
+              to="/login"
+              style={({ isActive }) => (isActive ? { ...linkStyle, ...activeStyle } : linkStyle)}
+            >
+              Log in / Sign up
+            </NavLink>
           )}
         </div>
       </nav>
