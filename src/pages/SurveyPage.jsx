@@ -7,7 +7,9 @@ import { saveSurveyResult } from "../db/surveyResults/crud";
 const { VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY } = import.meta.env;
 
 export default function SurveyPage() {
-  const [answers, setAnswers] = useState({});          
+  // holds the current answers as { questionId: answerValue }
+  const [answers, setAnswers] = useState({});  
+  // holds the computed survey result once the user submits the form        
   const [result, setResult] = useState(null);  
 
   //every question must have an answer
@@ -16,15 +18,18 @@ export default function SurveyPage() {
     [answers]
   );
 
+  // counts how many questions have been answered.
   const answeredCount = useMemo(
+    // QUESTIONS.reduce((n, q) => ..., 0) loops through questions and builds up a number n, starting at 0.
     () => QUESTIONS.reduce((n, q) => n + (answers[q.id] != null ? 1 : 0), 0),
     [answers]
   );
-
+  // When the user selects an option, this function stores that answer under the question’s id in the answers state.
   const onChange = (qid, value) =>
     setAnswers(prev => ({ ...prev, [qid]: Number(value) }));
 
   const onSubmit = async (e) => {
+    // 
     e.preventDefault();
 
     const supabase= await createClient(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY);         
@@ -57,10 +62,11 @@ const surveyResult = {
 // Save to Supabase
 await saveSurveyResult(supabase, surveyResult);
 
+// Scrolls the window back to the top of the page
 window.scrollTo({ top: 0, behavior: 'smooth' });
 
   };
-
+  // function resets the survey so the user can take it again from scratch
   const retake = () => {
     // Clear answers and results so the form is fresh
     setAnswers({});
@@ -198,6 +204,9 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
             padding: '10px 16px',
             borderRadius: 8,
             border: 'none',
+            // The background and cursor change based on allAnswered:
+            // If all questions are answered:
+            // Background is dark (#111), cursor is a pointer (looks clickable).
             background: allAnswered ? '#111' : '#bbb',
             color: '#fff',
             cursor: allAnswered ? 'pointer' : 'not-allowed',

@@ -7,7 +7,6 @@ export default function Home() {
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "16px 0" }}>
       <h1 style={{ fontSize: 28, marginBottom: 8 }}>Security Self-Assessment</h1>
 
-      {/* Purpose section — ABOVE the chart */}
       <section aria-labelledby="purpose" style={{ marginBottom: 24 }}>
         <h2 id="purpose" style={{ fontSize: 22, marginBottom: 8 }}>
           Purpose of the Security Self-Assessment
@@ -20,12 +19,11 @@ export default function Home() {
         </p>
       </section>
 
-      {/* Chart in the middle */}
       <div style={{ marginBottom: 24 }}>
         <PastResults />
       </div>
 
-      {/* Hygiene section — BELOW the chart */}
+
       <section aria-labelledby="hygiene" style={{ marginBottom: 20 }}>
         <h2 id="hygiene" style={{ fontSize: 22, marginBottom: 8 }}>Basic Hygiene Score</h2>
         <p style={{ color: "#666", lineHeight: 1.6 }}>
@@ -43,7 +41,6 @@ export default function Home() {
         </p>
       </section>
 
-      {/* Phishing section — BELOW the chart */}
       <section aria-labelledby="phishing" style={{ marginBottom: 20 }}>
         <h2 id="phishing" style={{ fontSize: 22, marginBottom: 8 }}>Phishing Awareness Score</h2>
         <p style={{ color: "#666", lineHeight: 1.6 }}>

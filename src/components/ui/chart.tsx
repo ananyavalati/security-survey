@@ -7,7 +7,7 @@ type ChartConfig = Record<
   string,
   {
     label: string
-    color?: string // CSS var name like "--chart-1"
+    color?: string 
   }
 >
 
@@ -58,7 +58,7 @@ export function ChartLegendItem({
   colorVar,
   children,
 }: {
-  colorVar: string // like "--chart-1"
+  colorVar: string 
   children: React.ReactNode
 }) {
   return (
@@ -72,7 +72,7 @@ export function ChartLegendItem({
   )
 }
 
-// Tooltip passthrough so you can style if you want later
+
 export function ChartTooltip({
   children,
 }: {
