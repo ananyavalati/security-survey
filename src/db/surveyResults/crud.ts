@@ -1,4 +1,3 @@
-
 import type { SupabaseClient, PostgrestError, AuthError } from "@supabase/supabase-js";
 
 export type SurveyResultRow = {
@@ -25,19 +24,19 @@ export async function saveSurveyResult(
     .insert([surveyResult])
     .select()
     .single();
-  if (error) return null;
+
+  if (error) {
+    console.error("Error saving survey result:", error);
+    return null;
+  }
   return data as SurveyResultRow;
 }
 
-export type ListOpts = {
-  startDate?: string; 
-  endDate?: string;   
-};
-
+type ListOpts = { startDate?: string; endDate?: string };
 
 export async function listSurveyResults(
   client: SupabaseClient,
-  opts: ListOpts = {}
+  opts?: ListOpts
 ): Promise<{ rows: SurveyResultRow[]; error: PostgrestError | AuthError | null }> {
   const { data: userData, error: userErr } = await client.auth.getUser();
   if (userErr || !userData?.user) {
@@ -49,11 +48,10 @@ export async function listSurveyResults(
     .select("id, created_at, user_id, overall_score, phishing_awareness, basic_hygiene")
     .eq("user_id", userData.user.id);
 
-  if (opts.startDate) q = q.gte("created_at", opts.startDate);
-  if (opts.endDate)   q = q.lte("created_at", opts.endDate);
+  if (opts?.startDate) q = q.gte("created_at", opts.startDate);
+  if (opts?.endDate)   q = q.lte("created_at", opts.endDate);
 
-  q = q.order("created_at", { ascending: true });
+  const { data, error } = await q.order("created_at", { ascending: true });
 
-  const { data, error } = await q;
   return { rows: (data as SurveyResultRow[]) ?? [], error };
 }
